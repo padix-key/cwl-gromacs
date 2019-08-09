@@ -7,7 +7,9 @@ baseCommand: [gmx, solvate, -nobackup]
 requirements:
   InitialWorkDirRequirement:
     listing:
-      - $(inputs.in_topology)
+      - entry: $(inputs.in_topology)
+        writable: true
+
 
 inputs:
   in_structure:
