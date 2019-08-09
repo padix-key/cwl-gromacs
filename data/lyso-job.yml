@@ -1,0 +1,11 @@
+in_structure:
+  class: File
+  format: gromacs:pdb
+  path: 1aki.pdb
+out_structure: 1aki.gro
+
+force_field: oplsaa
+water_model: spce
+
+$namespaces:
+  gromacs: http://manual.gromacs.org/documentation/2018/user-guide/file-formats.html
