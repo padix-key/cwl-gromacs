@@ -2,43 +2,38 @@ cwlVersion: v1.0
 
 class: CommandLineTool
 
-baseCommand: [gmx, pdb2gmx, -nobackup]
+baseCommand: [gmx, solvate, -nobackup]
+
+requirements:
+  InitialWorkDirRequirement:
+    listing:
+      - entry: $(inputs.topology)
+        writable: true
+
 
 inputs:
   in_structure:
     type: File
     format: [gromacs:pdb, gromacs:gro]
     inputBinding:
-      prefix: -f
+      prefix: -cp
   out_structure:
     type: string
     inputBinding:
       prefix: -o
     default: structure.gro
-  out_topology:
-    type: string
+  topology:
+    type: File
+    format: gromacs:top
     inputBinding:
       prefix: -p
-    default: topol.top
-  force_field:
-    type: [string, File]
-    format: [gromacs:ff]
+      valueFrom: $(self.basename)
+  water_structure:
+    type: File?
+    format: [gromacs:pdb, gromacs:gro]
     inputBinding:
-      prefix: -ff
-  water_model:
-    type:
-      type: enum
-      symbols:
-        - none
-        - spc
-        - spce
-        - tip3p
-        - tip4p
-        - tip5p
-        - tips3p
-      label: The water model
-    inputBinding:
-      prefix: -water
+      prefix: -cs
+  
 
 outputs:
   out_structure:
@@ -46,11 +41,11 @@ outputs:
     format: gromacs:gro
     outputBinding:
       glob: $(inputs.out_structure)
-  out_topology:
+  topology:
     type: File
     format: gromacs:top
     outputBinding:
-      glob: $(inputs.out_topology)
+      glob: $(inputs.topology.basename)
 
 $namespaces:
   gromacs: http://manual.gromacs.org/documentation/2018/user-guide/file-formats.html
