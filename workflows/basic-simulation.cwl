@@ -17,18 +17,8 @@ inputs:
   force_field:
     type: string?
   water_model:
-    type:
-      - 'null'
-      - type: enum
-        symbols:
-          - none
-          - spc
-          - spce
-          - tip3p
-          - tip4p
-          - tip5p
-          - tips3p
-        name: water_model
+    type: string
+    default: tip3p
   out_structure:
     type: string
   out_trajectory:

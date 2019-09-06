@@ -31,17 +31,8 @@ inputs:
     inputBinding:
       prefix: -ff
   water_model:
-    type:
-      type: enum
-      symbols:
-        - none
-        - spc
-        - spce
-        - tip3p
-        - tip4p
-        - tip5p
-        - tips3p
-      label: The water model
+    type: string
+    label: The name of the water model
     inputBinding:
       prefix: -water
 
