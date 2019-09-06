@@ -29,32 +29,26 @@ inputs:
           - tip5p
           - tips3p
         name: water_model
-  genion_parameters:
-    type: File
-    default:
-      class: File
-      format: gromacs:mdp
-      location: ../mdp/ions.mdp
-  genion_parameters:
-    type: File
-    default:
-      class: File
-      format: gromacs:mdp
-      location: ../mdp/ions.mdp
   out_structure:
     type: string
   ion_replacement_group:
     type: string
     default: SOL
+  minimization_parameters:
+    type: File
+    default:
+      class: File
+      format: gromacs:mdp
+      location: ../mdp/minimization.mdp
 
 
 outputs:
   topology:
     type: File
-    outputSource: genion/topology
+    outputSource: salt/topology
   structure:
     type: File
-    outputSource: genion/structure
+    outputSource: minimization/structure
 
 
 steps:
@@ -98,56 +92,39 @@ steps:
       - structure
       - topology
   
-  grompp_genion:
-    run: ../tools/grompp.cwl
+  salt:
+    run: ../subtasks/salt.cwl
     in:
-      parameters:
-        source: genion_parameters
       structure:
         source: solvate/structure
       topology:
         source: solvate/topology
     out:
+      - structure
+      - topology
+  
+  grompp_minimization:
+    run: ../tools/grompp.cwl
+    in:
+      parameters:
+        source: minimization_parameters
+      structure:
+        source: salt/structure
+      topology:
+        source: salt/topology
+    out:
       - runnable
   
-  genion:
-    run: ../tools/genion.cwl
+  minimization:
+    run: ../tools/mdrun.cwl
     in:
       runnable:
-        source: grompp_genion/runnable
-      topology:
-        source: solvate/topology
-      group:
-        source: ion_replacement_group
+        source: grompp_minimization/runnable
       out_structure:
         source: out_structure
     out:
       - structure
-      - topology
-  
-#  grompp_minimitation:
-#    run: ../tools/grompp.cwl
-#    in:
-#      parameters:
-#        source: genion_parameters
-#      structure:
-#        source: solvate/out_structure
-#      topology:
-#        source: solvate/topology
-#    out:
-#      - out_runnable
-#  
-#  minimitation:
-#    run: ../tools/mdrun.cwl
-#    in:
-#      runnable:
-#        source: grompp_genion/out_runnable
-#      out_structure:
-#        source: out_structure
-#    out:
-#      - out_structure
-#      - topology
-#
+
 
 $namespaces:
   gromacs: http://manual.gromacs.org/documentation/2018/user-guide/file-formats.html

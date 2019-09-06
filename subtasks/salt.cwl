@@ -2,11 +2,14 @@ cwlVersion: v1.0
 
 class: Workflow
 
+requirements:
+  SubworkflowFeatureRequirement: {}
+
 
 inputs:
-  runnable:
+  structure:
     type: File
-    format: gromacs:tpr
+    format: [gromacs:gro, gromacs:gro]
   out_structure:
     type: string
     default: structure.gro
@@ -24,9 +27,12 @@ inputs:
   anions:
     type: string
     default: CL
-  group:
-    type: string
-    default: SOL
+  genion_parameters:
+    type: File
+    default:
+      class: File
+      format: gromacs:mdp
+      location: ../mdp/ions.mdp
 
 
 outputs:
@@ -41,37 +47,25 @@ outputs:
 
 
 steps:
-  echo:
-    run: ./_echo.cwl
+  grompp:
+    run: ../tools/grompp.cwl
     in:
-      message:
-        source: group
-    out:
-      - message_file
-  
-  genion:
-    run: ./_genion.cwl
-    in:
-      runnable:
-        source: runnable
-      out_structure:
-        source: out_structure
+      parameters:
+        source: genion_parameters
+      structure:
+        source: structure
       topology:
         source: topology
-      concentration:
-        source: concentration
-        default: null
-      neutral:
-        source: neutral
-        default: null
-      cations:
-        source: cations
-        default: null
-      anions:
-        source: anions
-        default: null
-      group:
-        source: echo/message_file
+    out:
+      - runnable
+  
+  genion:
+    run: ../tools/genion.cwl
+    in:
+      runnable:
+        source: grompp/runnable
+      topology:
+        source: topology
     out:
       - structure
       - topology
