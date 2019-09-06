@@ -9,6 +9,7 @@ requirements:
     listing:
       - entry: $(inputs.topology)
         writable: true
+      - entry: $(inputs.restraint_potentials)
 
 
 inputs:
@@ -38,6 +39,9 @@ inputs:
     format: [gromacs:pdb, gromacs:gro, gromacs:tpr]
     inputBinding:
       prefix: -rb
+  restraint_potentials:
+    type: File?
+    format: [gromacs:itp]
   out_parameters:
     type: string
     inputBinding:

@@ -20,7 +20,7 @@ inputs:
     inputBinding:
       prefix: -p
     default: topol.top
-  out_position_restraints:
+  out_restraint_potentials:
     type: string
     inputBinding:
       prefix: -i
@@ -56,11 +56,11 @@ outputs:
     format: gromacs:top
     outputBinding:
       glob: $(inputs.topology)
-  position_restraints:
+  restraint_potentials:
     type: File
     format: gromacs:itp
     outputBinding:
-      glob: $(inputs.out_position_restraints)
+      glob: $(inputs.out_restraint_potentials)
 
 $namespaces:
   gromacs: http://manual.gromacs.org/documentation/2018/user-guide/file-formats.html

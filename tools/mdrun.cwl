@@ -11,11 +11,6 @@ inputs:
     format: gromacs:tpr
     inputBinding:
       prefix: -s
-  checkpoint:
-    type: File?
-    format: gromacs:cpt
-    inputBinding:
-      prefix: -cpi
   out_trajectory:
     type: string
     inputBinding:
@@ -26,11 +21,6 @@ inputs:
     inputBinding:
       prefix: -x
     default: traj.xtc
-  out_checkpoint:
-    type: string
-    inputBinding:
-      prefix: -cpo
-    default: state.cpt
   out_structure:
     type: string
     inputBinding:
@@ -59,11 +49,6 @@ outputs:
     format: gromacs:xtc
     outputBinding:
       glob: $(inputs.out_trajectory_compressed)
-  checkpoint:
-    type: File?
-    format: gromacs:cpt
-    outputBinding:
-      glob: $(inputs.out_checkpoint)
   structure:
     type: File
     format: gromacs:gro

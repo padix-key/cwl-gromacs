@@ -31,6 +31,8 @@ inputs:
         name: water_model
   out_structure:
     type: string
+  out_trajectory:
+    type: string
   ion_replacement_group:
     type: string
     default: SOL
@@ -40,6 +42,24 @@ inputs:
       class: File
       format: gromacs:mdp
       location: ../mdp/minimization.mdp
+  nvt_equilibration_parameters:
+    type: File
+    default:
+      class: File
+      format: gromacs:mdp
+      location: ../mdp/nvt_equilibration.mdp
+  npt_equilibration_parameters:
+    type: File
+    default:
+      class: File
+      format: gromacs:mdp
+      location: ../mdp/npt_equilibration.mdp
+  production_parameters:
+    type: File
+    default:
+      class: File
+      format: gromacs:mdp
+      location: ../mdp/production.mdp
 
 
 outputs:
@@ -48,7 +68,10 @@ outputs:
     outputSource: salt/topology
   structure:
     type: File
-    outputSource: minimization/structure
+    outputSource: production_simulation/structure
+  trajectory:
+    type: File
+    outputSource: production_simulation/trajectory_compressed
 
 
 steps:
@@ -66,6 +89,7 @@ steps:
     out:
       - structure
       - topology
+      - restraint_potentials
   
   editconf:
     run: ../tools/editconf.cwl
@@ -112,10 +136,62 @@ steps:
         source: salt/structure
       topology:
         source: salt/topology
+    out:
+      - structure
+  
+  nvt_equilibration:
+    run: ../subtasks/simulate.cwl
+    in:
+      parameters:
+        source: nvt_equilibration_parameters
+      structure:
+        source: minimization/structure
+      restraints:
+        source: minimization/structure
+      restraint_potentials:
+        source: pdb2gmx/restraint_potentials
+      topology:
+        source: salt/topology
       out_structure:
         source: out_structure
     out:
       - structure
+  
+  npt_equilibration:
+    run: ../subtasks/simulate.cwl
+    in:
+      parameters:
+        source: npt_equilibration_parameters
+      structure:
+        source: nvt_equilibration/structure
+      restraints:
+        source: nvt_equilibration/structure
+      restraint_potentials:
+        source: pdb2gmx/restraint_potentials
+      topology:
+        source: salt/topology
+      out_structure:
+        source: out_structure
+    out:
+      - structure
+  
+  production_simulation:
+    run: ../subtasks/simulate.cwl
+    in:
+      parameters:
+        source: production_parameters
+      structure:
+        source: npt_equilibration/structure
+      topology:
+        source: salt/topology
+      out_structure:
+        source: out_structure
+      out_trajectory_compressed:
+        source: out_trajectory
+    out:
+      - structure
+      - trajectory_compressed
+  
 
 
 $namespaces:
