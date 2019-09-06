@@ -103,8 +103,8 @@ steps:
       - structure
       - topology
   
-  grompp_minimization:
-    run: ../tools/grompp.cwl
+  minimization:
+    run: ../subtasks/simulate.cwl
     in:
       parameters:
         source: minimization_parameters
@@ -112,14 +112,6 @@ steps:
         source: salt/structure
       topology:
         source: salt/topology
-    out:
-      - runnable
-  
-  minimization:
-    run: ../tools/mdrun.cwl
-    in:
-      runnable:
-        source: grompp_minimization/runnable
       out_structure:
         source: out_structure
     out:

@@ -116,7 +116,6 @@ steps:
       out_log:
         source: out_log
     out:
-      - structure
       - trajectory
       - trajectory_compressed
       - checkpoint
