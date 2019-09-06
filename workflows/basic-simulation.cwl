@@ -12,7 +12,7 @@ requirements:
 
 
 inputs:
-  in_structure:
+  structure:
     type: File
   force_field:
     type: string?
@@ -35,9 +35,15 @@ inputs:
       class: File
       format: gromacs:mdp
       location: ../mdp/ions.mdp
+  genion_parameters:
+    type: File
+    default:
+      class: File
+      format: gromacs:mdp
+      location: ../mdp/ions.mdp
   out_structure:
     type: string
-  group:
+  ion_replacement_group:
     type: string
     default: SOL
 
@@ -46,9 +52,9 @@ outputs:
   topology:
     type: File
     outputSource: genion/topology
-  out_structure:
+  structure:
     type: File
-    outputSource: genion/out_structure
+    outputSource: genion/structure
 
 
 steps:
@@ -58,13 +64,13 @@ steps:
       force_field:
         default: oplsaa
         source: force_field
-      in_structure:
-        source: in_structure
+      structure:
+        source: structure
       water_model:
         default: spce
         source: water_model
     out:
-      - out_structure
+      - structure
       - topology
   
   editconf:
@@ -76,20 +82,20 @@ steps:
         default: true
       distance_to_box_edge:
         default: 1
-      in_structure:
-        source: pdb2gmx/out_structure
+      structure:
+        source: pdb2gmx/structure
     out:
-      - out_structure
+      - structure
   
   solvate:
     run: ../tools/solvate.cwl
     in:
-      in_structure:
-        source: editconf/out_structure
+      structure:
+        source: editconf/structure
       topology:
         source: pdb2gmx/topology
     out:
-      - out_structure
+      - structure
       - topology
   
   grompp_genion:
@@ -98,27 +104,50 @@ steps:
       parameters:
         source: genion_parameters
       structure:
-        source: solvate/out_structure
+        source: solvate/structure
       topology:
         source: solvate/topology
     out:
-      - out_runnable
+      - runnable
   
   genion:
     run: ../tools/genion.cwl
     in:
       runnable:
-        source: grompp_genion/out_runnable
+        source: grompp_genion/runnable
       topology:
         source: solvate/topology
       group:
-        source: group
+        source: ion_replacement_group
       out_structure:
         source: out_structure
     out:
-      - out_structure
+      - structure
       - topology
-
+  
+#  grompp_minimitation:
+#    run: ../tools/grompp.cwl
+#    in:
+#      parameters:
+#        source: genion_parameters
+#      structure:
+#        source: solvate/out_structure
+#      topology:
+#        source: solvate/topology
+#    out:
+#      - out_runnable
+#  
+#  minimitation:
+#    run: ../tools/mdrun.cwl
+#    in:
+#      runnable:
+#        source: grompp_genion/out_runnable
+#      out_structure:
+#        source: out_structure
+#    out:
+#      - out_structure
+#      - topology
+#
 
 $namespaces:
   gromacs: http://manual.gromacs.org/documentation/2018/user-guide/file-formats.html

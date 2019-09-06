@@ -2,7 +2,7 @@ cwlVersion: v1.0
 
 class: CommandLineTool
 
-baseCommand: [gmx, grompp, -nobackup]
+baseCommand: [gmx, grompp, -nobackup, -quiet]
 
 requirements:
   InitialWorkDirRequirement:
@@ -51,12 +51,12 @@ inputs:
   
 
 outputs:
-  out_parameters:
+  parameters:
     type: File
     format: gromacs:mdp
     outputBinding:
       glob: $(inputs.out_parameters)
-  out_runnable:
+  runnable:
     type: File
     format: gromacs:tpr
     outputBinding:

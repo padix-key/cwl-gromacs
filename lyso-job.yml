@@ -1,4 +1,4 @@
-in_structure:
+structure:
   class: File
   format: gromacs:pdb
   path: 1aki.pdb

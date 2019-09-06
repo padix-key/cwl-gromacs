@@ -2,10 +2,10 @@ cwlVersion: v1.0
 
 class: CommandLineTool
 
-baseCommand: [gmx, pdb2gmx, -nobackup]
+baseCommand: [gmx, pdb2gmx, -nobackup, -quiet]
 
 inputs:
-  in_structure:
+  structure:
     type: File
     format: [gromacs:pdb, gromacs:gro]
     inputBinding:
@@ -46,7 +46,7 @@ inputs:
       prefix: -water
 
 outputs:
-  out_structure:
+  structure:
     type: File
     format: gromacs:gro
     outputBinding:
@@ -56,7 +56,7 @@ outputs:
     format: gromacs:top
     outputBinding:
       glob: $(inputs.topology)
-  out_position_restraints:
+  position_restraints:
     type: File
     format: gromacs:itp
     outputBinding:

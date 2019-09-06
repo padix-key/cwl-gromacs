@@ -2,10 +2,11 @@ cwlVersion: v1.0
 
 class: CommandLineTool
 
-baseCommand: [gmx, editconf, -nobackup]
+baseCommand: [gmx, editconf, -nobackup, -quiet]
+
 
 inputs:
-  in_structure:
+  structure:
     type: File
     format: [gromacs:pdb, gromacs:gro]
     inputBinding:
@@ -34,12 +35,14 @@ inputs:
     inputBinding:
       prefix: -bt
 
+
 outputs:
-  out_structure:
+  structure:
     type: File
     format: gromacs:gro
     outputBinding:
       glob: $(inputs.out_structure)
+
 
 $namespaces:
   gromacs: http://manual.gromacs.org/documentation/2018/user-guide/file-formats.html

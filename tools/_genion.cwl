@@ -2,7 +2,7 @@ cwlVersion: v1.0
 
 class: CommandLineTool
 
-baseCommand: [gmx, genion, -nobackup]
+baseCommand: [gmx, genion, -nobackup, -quiet]
 
 requirements:
   InitialWorkDirRequirement:
@@ -52,7 +52,7 @@ inputs:
 
 
 outputs:
-  out_structure:
+  structure:
     type: File
     format: gromacs:gro
     outputBinding:

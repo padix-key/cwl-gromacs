@@ -29,10 +29,10 @@ inputs:
 
 
 outputs:
-  out_structure:
+  structure:
     type: File
     format: gromacs:gro
-    outputSource: genion/out_structure
+    outputSource: genion/structure
   topology:
     type: File
     format: gromacs:top
@@ -72,7 +72,7 @@ steps:
       group:
         source: echo/message_file
     out:
-      - out_structure
+      - structure
       - topology
 
 

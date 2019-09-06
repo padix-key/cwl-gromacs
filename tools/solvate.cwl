@@ -2,7 +2,7 @@ cwlVersion: v1.0
 
 class: CommandLineTool
 
-baseCommand: [gmx, solvate, -nobackup]
+baseCommand: [gmx, solvate, -nobackup, -quiet]
 
 requirements:
   InitialWorkDirRequirement:
@@ -12,7 +12,7 @@ requirements:
 
 
 inputs:
-  in_structure:
+  structure:
     type: File
     format: [gromacs:pdb, gromacs:gro]
     inputBinding:
@@ -36,7 +36,7 @@ inputs:
   
 
 outputs:
-  out_structure:
+  structure:
     type: File
     format: gromacs:gro
     outputBinding:
