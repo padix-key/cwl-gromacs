@@ -2,7 +2,8 @@ structure:
   class: File
   format: gromacs:pdb
   path: 1aki.pdb
-out_structure: 1aki.gro
+out_structure: md.gro
+out_trajectory: md.xtc
 
 force_field: oplsaa
 water_model: spce
