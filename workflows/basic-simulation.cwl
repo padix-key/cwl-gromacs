@@ -193,6 +193,5 @@ steps:
       - trajectory_compressed
   
 
-
 $namespaces:
   gromacs: http://manual.gromacs.org/documentation/2018/user-guide/file-formats.html
